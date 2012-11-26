@@ -37,7 +37,7 @@ namespace XSLTParserTesting
 
             // Load a compiled transform object and set the url to the main content.xslt sheet
             var xslt = new XslCompiledTransform();
-            var url = string.Format(@"{0}.xslt", xsltFileName);
+            var url = HttpContext.Current.Server.MapPath(string.Format(@"{0}.xslt", xsltFileName));
 
             // Perform XSL transformation
             xslt.Load(url);
