@@ -37,7 +37,7 @@ namespace XSLTParserTesting
 
             // Load a compiled transform object and set the url to the main content.xslt sheet
             var xslt = new XslCompiledTransform();
-            var url = string.Format(@"C:\Users\depouw\Documents\GitHub\kendo-docs-site\Kendo UI Documentation\Modules\GitHubDocs\Xslt\{0}.xslt", xsltFileName);
+            var url = string.Format(@"{0}.xslt", xsltFileName);
 
             // Perform XSL transformation
             xslt.Load(url);
