@@ -4,11 +4,16 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using MarkdownSharp;
+using SitefinityWebApp.Modules.GitHubDocs.Core.Documentation;
+using SitefinityWebApp.Modules.GitHubDocs.Core.GitHub.Importer;
+using SitefinityWebApp.Modules.GitHubDocs.Core.GitHub.Importer.HTMLTransformation;
 
 namespace XSLTParserTesting
 {
     public partial class _Default : Page
     {
+        private readonly IHtmlTransformer _htmlTransformer = new HtmlTransformer(new ImageSourceAdjuster(), new LocalXSLTLoader(), 
+            new MalformedHTMLStripper(), new SectionHtmlTagWrapper(), new HtmlHyperlinkStripper());
         protected void Page_Load(object sender, EventArgs e)
         {
             ErrorLabel.Visible = false;
@@ -33,7 +38,7 @@ namespace XSLTParserTesting
                 ShowError("Please post a Markdown file (file ending in md extension).");
                 return;
             }
-            StreamReader streamReader = new StreamReader(MarkdownFileInput.PostedFile.InputStream);
+            var streamReader = new StreamReader(MarkdownFileInput.PostedFile.InputStream);
             string markdownFileContents = streamReader.ReadToEnd();
             string html = ShowMarkdownAndGetHTML(markdownFileContents);
             ShowXSLTParsedHTML(html);
@@ -44,7 +49,7 @@ namespace XSLTParserTesting
             string transformed;
             try
             {
-                transformed = new HtmlTransformer().TransformHtml(html, MarkdownFileInput.PostedFile.FileName, XSLTFileDDL.SelectedValue.ToLower());
+                transformed = _htmlTransformer.TransformHtml(html, MarkdownFileInput.PostedFile.FileName, XSLTFileDDL.SelectedValue.ToLower());
             }
             catch (HtmlTransformationException ex)
             {
